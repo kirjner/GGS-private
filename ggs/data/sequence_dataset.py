@@ -260,6 +260,10 @@ class PreScoredSequenceDataset(Dataset):
         self._raw_data = pd.read_csv(csv_path).rename(
             columns={'target': 'scores', 'sequence': 'sequences'})
         self._data = self._raw_data.copy()
+
+        # take only the top 10k sequences
+        self._data = self._data.sort_values('scores', ascending=False).iloc[:10000]
+        
         self._log.info(
             f"Found {len(self.sequences)} sequences "
             f"with TRUE scores between {np.min(self.scores):.2f} and {np.max(self.scores):.2f}"
@@ -267,6 +271,8 @@ class PreScoredSequenceDataset(Dataset):
         self._cluster_cutoff = cluster_cutoff
         self._log.info('Clustering with TRUE scores. After this everything is predicted scores.')
         self.cluster()
+        #just sample 10k sequence sinstead
+
         self._observed_sequences = {seq: 1 for seq in self.sequences}
         self._max_visits = max_visits
         self._pairs = pd.DataFrame({
@@ -318,13 +324,14 @@ class PreScoredSequenceDataset(Dataset):
 
     def cluster(self):
         # Convert to integer array. Doesn't matter what ordering we use.
-        alphabet = "ARNDCQEGHILKMFPSTWYV"
+        #alphabet = "ARNDCQEGHILKMFPSTWYV"
+        alphabet = '01'
         seq_ints = [[
             alphabet.index(x) for x in seq
         ] for seq in self.sequences]
         seq_array = np.array(seq_ints)
         Z = linkage(seq_array, 'average', metric='hamming')
-
+        print("hi")
         # Cluster to desired number of clusters.
         cluster_assignments = fcluster(Z, t=self._cluster_cutoff, criterion='maxclust')
 

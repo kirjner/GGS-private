@@ -89,6 +89,7 @@ class BaseCNN(nn.Module):
 
     def forward(self, x):
         #onehotize
+        import pdb; pdb.set_trace()
         if self._make_one_hot:
             x = F.one_hot(x.long(), num_classes=self.n_tokens)
         x = x.permute(0, 2, 1).float()
@@ -103,17 +104,23 @@ class BaseCNN(nn.Module):
     
 # A Dense MLP with (n_layers) layers that takes in a binary vector and outputs a scalar
 class ToyMLP(nn.Module):
-    def __init__(self, seq_len, n_layers=1, hidden_size=256, **kwargs):
+    def __init__(self, seq_len, n_tokens = 2, make_one_hot=True, n_layers=1, hidden_size=256, **kwargs):
         super(ToyMLP, self).__init__()
         self.layers = nn.ModuleList()
-        self.layers.append(nn.Linear(seq_len, hidden_size))
+        self.layers.append(nn.Linear(seq_len*2, hidden_size))
+        self._make_one_hot = make_one_hot
+        self.n_tokens = n_tokens
         for i in range(n_layers-1):
             self.layers.append(nn.Linear(hidden_size, hidden_size))
         self.layers.append(nn.Linear(hidden_size, 1))
         self.act_fn = nn.ReLU()
 
     def forward(self, x):
-        x = x.float()
+        import pdb; pdb.set_trace()
+        if self._make_one_hot:
+            x = F.one_hot(x.long(), num_classes=self.n_tokens)
+        #flatten the one-hot and make float
+        x = x.view(x.shape[0], -1).float()
         for layer in self.layers[:-1]:
             x = self.act_fn(layer(x))
         x = self.layers[-1](x)

@@ -29,6 +29,8 @@ model:
     seq_len: ${experiment.seq_len}  #9^2 for diamond
     n_layers: 2 # num hidden layers
     hidden_size: 256
+    n_tokens: 2 #20 for gfp
+
   
 
 trainer:
@@ -47,6 +49,7 @@ data:
   pin_memory: False
   num_workers: 8
   encoding: onehot
+  #alphabet: "ARNDCQEGHILKMFPSTWYV"
   alphabet: "01" # binary for diamond
   val_samples: 200
   sequence_column: sequence

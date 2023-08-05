@@ -5,7 +5,7 @@ import time
 import torch.distributions as dists
 import torch.nn.functional as F
 import pandas as pd
-from ggs.models.predictors import BaseCNN
+from ggs.models.predictors import BaseCNN, ToyMLP
 from omegaconf import OmegaConf
 import os
 from ggs.data.utils.tokenize import Encoder
@@ -39,13 +39,16 @@ class GwgPairSampler(torch.nn.Module):
             verbose: bool = False,
             gibbs_samples: int = 500,
             device: str = "cuda",
+            task: str = 'GFP',
+            alphabet: str = 'ARNDCQEGHILKMFPSTWYV'
         ):
         super().__init__()
         self._ckpt_name = ckpt_name
         self._log = logging.getLogger(__name__)
         self.device = torch.device(device)
+        self.task = task
         self._log.info(f'Using device: {self.device}')
-        self.predictor_tokenizer =Encoder()
+        self.predictor_tokenizer = Encoder(alphabet=alphabet)
         self.predictor = self._setup_predictor(predictor_dir)
         self.num_tokens = len(self.predictor_tokenizer.alphabet)
         self.temp = temperature
@@ -61,7 +64,7 @@ class GwgPairSampler(torch.nn.Module):
         cfg_path = os.path.join(predictor_dir, 'config.yaml')
         with open(cfg_path, 'r') as fp:
             ckpt_cfg = OmegaConf.load(fp.name)
-        predictor = BaseCNN(make_one_hot=False, **ckpt_cfg.model.predictor)
+        predictor = BaseCNN(make_one_hot=False, **ckpt_cfg.model.predictor) if self.task != 'Diamond' else ToyMLP(**ckpt_cfg.model.predictor)
         state_dict = {k.replace('predictor.', ''): v for k, v in mdl_info['state_dict'].items()}
         predictor.load_state_dict(state_dict)
         predictor.eval()
@@ -106,7 +109,7 @@ class GwgPairSampler(torch.nn.Module):
         return seq_one_hot
 
     def _evaluate_one_hot(self, seq):
-        input_one_hot = self._make_one_hot(seq)
+        input_one_hot = self._make_one_hot(seq) if self.task != 'Diamond' else seq
         model_out = self.predictor(input_one_hot)
         return model_out
 
@@ -188,6 +191,7 @@ class GwgPairSampler(torch.nn.Module):
             start_time = time.time()
 
             # Cast as float to take gradients through
+            import pdb; pdb.set_trace()
             seq_one_hot = self._make_one_hot(token_seq, differentiable=True)
 
             # Compute base score
