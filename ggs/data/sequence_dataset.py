@@ -43,7 +43,10 @@ class SequenceDataset(Dataset):
         neg_data['source'] = 'neg_aug'
 
         prev_num_rows = true_data.shape[0]
-        filtered_data = self._filter(true_data, filter_percentile, min_mutant_dist)
+        if filter_percentile != [0.0, 1.0] or min_mutant_dist != 0:
+            filtered_data = self._filter(true_data, filter_percentile, min_mutant_dist)
+        else:
+            filtered_data = true_data
         new_num_rows = filtered_data.shape[0]
         self._log.info(
             f"Filtered {prev_num_rows} to {new_num_rows} rows in {filter_percentile} "

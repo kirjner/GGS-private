@@ -1,0 +1,12 @@
+seq_len: 81 #9^2 for diamond
+task: Diamond
+diamond:
+  csv_path: ${paths.data_dir}/Diamond/ground_truth.csv
+  output_dir: ${paths.data_dir}/Diamond/
+  filter_percentile: [0.0, 1.0]
+  min_mutant_dist: 0
+  top_quantile: 0.99
+  use_levenshtein: True
+  use_neg_data: False
+  smoothed_data_fname: null 
+

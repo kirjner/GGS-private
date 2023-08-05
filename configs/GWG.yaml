@@ -17,10 +17,11 @@ data:
   max_visits: 1
 
 run:
-  max_epochs: 22
-  run_name: run_${now:%Y-%m-%d}_${now:%H-%M-%S} #IE_${run.max_epochs}  -- use this name if you don't want the date, but instead the number of epochs
+  max_epochs: 3
+  run_name: run_${now:%Y-%m-%d}_${now:%H-%M} #IE_${run.max_epochs}  -- use this name if you don't want the date, but instead the number of epochs
   debug: False
   seed: 1
+  cluster: True
 
 # task name, determines output directory path
 task_name: GWG

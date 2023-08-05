@@ -4,7 +4,7 @@ results_name: eval_run
 topk: 128
 gt_csv: ${paths.data_dir}/GFP/ground_truth.csv
 oracle_dir: ${paths.ckpt_dir}/GFP/mutations_0/percentile_0.0_1.0/
-ggs_samples_dir: ${paths.ckpt_dir}/GFP/mutations_7/percentile_0.1_0.3/smoothed/predictor/samples/IE_15
+ggs_samples_dir: ${paths.ckpt_dir}/GFP/mutations_7/percentile_0.1_0.3/smoothed/predictor/samples/big_samples
 predictor_dir: null
 topk_sampling: greedy
 epoch_filter: null

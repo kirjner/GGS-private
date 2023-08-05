@@ -3,7 +3,7 @@ from typing import Any
 import torch
 from pytorch_lightning import LightningModule
 from torchmetrics import MinMetric, MaxMetric, MeanMetric, SpearmanCorrCoef, PearsonCorrCoef, MeanAbsoluteError
-from ggs.models.predictors import BaseCNN
+from ggs.models.predictors import BaseCNN, ToyMLP
 
 
 class PredictorModule(LightningModule):
@@ -22,7 +22,10 @@ class PredictorModule(LightningModule):
         super().__init__()
         self._cfg = model_cfg
 
-        self.predictor = BaseCNN(
+        # self.predictor = BaseCNN(
+        #     **self._cfg.predictor,
+        # )
+        self.predictor = ToyMLP(
             **self._cfg.predictor,
         )
         self.optimizer = torch.optim.Adam(

@@ -45,11 +45,15 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
         L.seed_everything(cfg.seed, workers=True)
 
     # Set-up data
+    print(cfg.data.task)
     if cfg.data.task == 'GFP':
         task_cfg = cfg.experiment.gfp
         filter_range = task_cfg.filter_percentile
     elif cfg.data.task == 'AAV':
         task_cfg = cfg.experiment.aav
+        filter_range = task_cfg.filter_percentile
+    elif cfg.data.task == 'Diamond':
+        task_cfg = cfg.experiment.diamond
         filter_range = task_cfg.filter_percentile
     else:
         raise ValueError(f"Unknown task: {cfg.data.task}")
