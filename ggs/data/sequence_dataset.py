@@ -262,7 +262,7 @@ class PreScoredSequenceDataset(Dataset):
         self._data = self._raw_data.copy()
 
         # take only the top 10k sequences
-        self._data = self._data.sort_values('scores', ascending=False).iloc[:10000]
+        #self._data = self._data.sort_values('scores', ascending=False).iloc[:10000]
         
         self._log.info(
             f"Found {len(self.sequences)} sequences "

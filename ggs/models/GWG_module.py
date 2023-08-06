@@ -40,7 +40,8 @@ class GwgPairSampler(torch.nn.Module):
             gibbs_samples: int = 500,
             device: str = "cuda",
             task: str = 'GFP',
-            alphabet: str = 'ARNDCQEGHILKMFPSTWYV'
+            alphabet: str = 'ARNDCQEGHILKMFPSTWYV',
+            use_big: bool = False,
         ):
         super().__init__()
         self._ckpt_name = ckpt_name

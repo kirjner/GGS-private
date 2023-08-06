@@ -1,5 +1,5 @@
 predictor_dir: ${paths.ckpt_dir}/Diamond/mutations_0/percentile_0.0_1.0/smoothed/run_06D_08M_2023Y_00h_07m_13s
-temperature: 0.5
+temperature: 0.01
 gibbs_samples: 100
 verbose: False
 ckpt_name: last.ckpt
