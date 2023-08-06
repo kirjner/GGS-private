@@ -1,4 +1,4 @@
-seq_len: 81 #9^2 for diamond
+seq_len: 441 #11^2 for diamond
 task: Diamond
 diamond:
   csv_path: ${paths.data_dir}/Diamond/ground_truth.csv

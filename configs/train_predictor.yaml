@@ -27,8 +27,8 @@ model:
     # seq_len: ${experiment.seq_len} 
 
     seq_len: ${experiment.seq_len}  #9^2 for diamond
-    n_layers: 2 # num hidden layers
-    hidden_size: 256
+    n_layers: 2 # num layers
+    hidden_size: 32
     n_tokens: 2 #20 for gfp
 
   
@@ -45,13 +45,13 @@ trainer:
 data:
   task: ${experiment.task}  # GFP or AAV or diamond
   seed: 420
-  batch_size: 1024
+  batch_size: 128
   pin_memory: False
-  num_workers: 8
+  num_workers: 4
   encoding: onehot
   #alphabet: "ARNDCQEGHILKMFPSTWYV"
   alphabet: "01" # binary for diamond
-  val_samples: 200
+  val_samples: 20
   sequence_column: sequence
 
   

@@ -89,7 +89,6 @@ class BaseCNN(nn.Module):
 
     def forward(self, x):
         #onehotize
-        import pdb; pdb.set_trace()
         if self._make_one_hot:
             x = F.one_hot(x.long(), num_classes=self.n_tokens)
         x = x.permute(0, 2, 1).float()
@@ -116,7 +115,6 @@ class ToyMLP(nn.Module):
         self.act_fn = nn.ReLU()
 
     def forward(self, x):
-        import pdb; pdb.set_trace()
         if self._make_one_hot:
             x = F.one_hot(x.long(), num_classes=self.n_tokens)
         #flatten the one-hot and make float

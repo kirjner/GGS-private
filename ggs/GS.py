@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.neighbors import kneighbors_graph
 from sklearn.preprocessing import OneHotEncoder
 import pandas as pd
-from ggs.models.predictors import BaseCNN
+from ggs.models.predictors import BaseCNN, ToyMLP
 from sklearn.model_selection import train_test_split
 from random import sample
 from petsc4py import PETSc
@@ -29,8 +29,8 @@ logging.root.setLevel(logging.NOTSET)
 logger = logging.getLogger('Graph-based Smoothing')
 pyrootutils.setup_root(__file__, indicator=".project-root", pythonpath=True)
 
-ALPHABET = list("ARNDCQEGHILKMFPSTWYV")
-
+#ALPHABET = list("ARNDCQEGHILKMFPSTWYV")
+ALPHABET=list("01")
 
 def run_predictor(seqs, batch_size, predictor):
     batches = torch.split(seqs, batch_size, 0)
@@ -154,6 +154,8 @@ def main(cfg: DictConfig) -> Optional[float]:
         task = 'GFP'
     elif 'AAV' in predictor_dir:
         task = 'AAV'
+    elif 'Diamond' in predictor_dir:
+        task = 'Diamond'
     else:
         raise ValueError(f'Task not found in predictor path: {predictor_dir}')
     data_dir = os.path.join(
@@ -167,7 +169,8 @@ def main(cfg: DictConfig) -> Optional[float]:
     cfg_path = os.path.join(predictor_dir, 'config.yaml')
     with open(cfg_path, 'r') as fp:
         ckpt_cfg = OmegaConf.load(fp.name)
-    predictor = BaseCNN(**ckpt_cfg.model.predictor)
+    #predictor = BaseCNN(**ckpt_cfg.model.predictor)
+    predictor=ToyMLP(**ckpt_cfg.model.predictor)
     predictor_info = torch.load(predictor_path, map_location='cuda:0')
     predictor.load_state_dict({k.replace('predictor.', ''): v for k, v in predictor_info['state_dict'].items()}, strict=True)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
