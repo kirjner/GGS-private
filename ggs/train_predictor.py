@@ -55,6 +55,9 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
     elif cfg.data.task == 'Diamond':
         task_cfg = cfg.experiment.diamond
         filter_range = task_cfg.filter_percentile
+    elif cfg.data.task == 'Diagonal':
+        task_cfg = cfg.experiment.diagonal
+        filter_range = task_cfg.filter_percentile
     else:
         raise ValueError(f"Unknown task: {cfg.data.task}")
     log.info(f'Training predictor on task {cfg.data.task}')

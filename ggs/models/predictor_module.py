@@ -22,12 +22,12 @@ class PredictorModule(LightningModule):
         super().__init__()
         self._cfg = model_cfg
 
-        # self.predictor = BaseCNN(
-        #     **self._cfg.predictor,
-        # )
-        self.predictor = ToyMLP(
+        self.predictor = BaseCNN(
             **self._cfg.predictor,
         )
+        # self.predictor = ToyMLP(
+        #     **self._cfg.predictor,
+        # )
         self.optimizer = torch.optim.Adam(
             params=self.predictor.parameters(),
             **self._cfg.optimizer,

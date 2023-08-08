@@ -1,0 +1,1 @@
+predictor_dir: ${paths.ckpt_dir}/Diagonal/mutations_0/percentile_0.0_1.0/unsmoothed/predictor/

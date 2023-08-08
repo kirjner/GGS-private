@@ -17,40 +17,40 @@ model:
     weight_decay: 0.0001
 
   predictor:
-    # n_tokens: 20 #20 for gfp
-    # kernel_size: 5
-    # input_size: 256
-    # dropout: 0.0
-    # name: CNN
-    # activation: relu
-    # linear: True
-    # seq_len: ${experiment.seq_len} 
+    n_tokens: 7 #20 for gfp
+    kernel_size: 5
+    input_size: 32
+    dropout: 0.0
+    name: CNN
+    activation: relu
+    linear: True
+    seq_len: ${experiment.seq_len} 
 
-    seq_len: ${experiment.seq_len}  #9^2 for diamond
-    n_layers: 2 # num layers
-    hidden_size: 32
-    n_tokens: 2 #20 for gfp
+    # seq_len: ${experiment.seq_len}  #9^2 for diamond
+    # n_layers: 2 # num layers
+    # hidden_size: 32
+    # n_tokens: 2 #20 for gfp
 
   
 
 trainer:
   default_root_dir: ${paths.output_dir}
   min_epochs: 1 # prevents early stopping
-  max_epochs: 1000
+  max_epochs: 200
   accelerator: gpu
   log_every_n_steps: 1
   check_val_every_n_epoch: 1
   deterministic: False
 
 data:
-  task: ${experiment.task}  # GFP or AAV or diamond
+  task: ${experiment.task}  # GFP or AAV or diamond or diagonal
   seed: 420
-  batch_size: 128
+  batch_size: 32
   pin_memory: False
   num_workers: 4
   encoding: onehot
   #alphabet: "ARNDCQEGHILKMFPSTWYV"
-  alphabet: "01" # binary for diamond
+  alphabet: "ABCDEFG" # binary for diamond
   val_samples: 20
   sequence_column: sequence
 

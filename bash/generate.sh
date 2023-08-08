@@ -8,4 +8,4 @@
 #SBATCH --mem=32GB
 #SBATCH --array=1-5
 
-python ggs/GWG.py experiment=generate/AAV-hard-smoothed run.seed=$SLURM_ARRAY_TASK_ID 
+python ggs/GWG.py experiment=generate/GFP-hard-smoothed run.seed=$SLURM_ARRAY_TASK_ID 

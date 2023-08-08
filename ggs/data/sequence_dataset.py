@@ -324,14 +324,14 @@ class PreScoredSequenceDataset(Dataset):
 
     def cluster(self):
         # Convert to integer array. Doesn't matter what ordering we use.
-        #alphabet = "ARNDCQEGHILKMFPSTWYV"
-        alphabet = '01'
+        alphabet = "ARNDCQEGHILKMFPSTWYV"
+        #alphabet = '01'
+        #alphabet='ABCDEFG'
         seq_ints = [[
             alphabet.index(x) for x in seq
         ] for seq in self.sequences]
         seq_array = np.array(seq_ints)
         Z = linkage(seq_array, 'average', metric='hamming')
-        print("hi")
         # Cluster to desired number of clusters.
         cluster_assignments = fcluster(Z, t=self._cluster_cutoff, criterion='maxclust')
 

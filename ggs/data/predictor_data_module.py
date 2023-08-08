@@ -29,7 +29,7 @@ class PredictorDataModule(LightningDataModule):
         self._pin_memory = pin_memory
         self._encoding = encoding
         self._seed = seed
-        if task in {'GFP', 'AAV', 'Diamond'}:
+        if task in {'GFP', 'AAV', 'Diamond', 'Diagonal'}:
             self._dataset = SequenceDataset(
                 **task_cfg,
                 alphabet=alphabet,

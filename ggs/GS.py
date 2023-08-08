@@ -22,7 +22,7 @@ import logging
 import time
 import os
 from datetime import datetime
-
+from tqdm import tqdm
 
 logging.basicConfig()
 logging.root.setLevel(logging.NOTSET)
@@ -30,7 +30,9 @@ logger = logging.getLogger('Graph-based Smoothing')
 pyrootutils.setup_root(__file__, indicator=".project-root", pythonpath=True)
 
 #ALPHABET = list("ARNDCQEGHILKMFPSTWYV")
-ALPHABET=list("01")
+#ALPHABET=list("01")
+ALPHABET=list("ABCDEFG")
+
 
 def run_predictor(seqs, batch_size, predictor):
     batches = torch.split(seqs, batch_size, 0)
@@ -156,6 +158,8 @@ def main(cfg: DictConfig) -> Optional[float]:
         task = 'AAV'
     elif 'Diamond' in predictor_dir:
         task = 'Diamond'
+    elif 'Diagonal' in predictor_dir:
+        task = 'Diagonal'
     else:
         raise ValueError(f'Task not found in predictor path: {predictor_dir}')
     data_dir = os.path.join(
@@ -169,8 +173,8 @@ def main(cfg: DictConfig) -> Optional[float]:
     cfg_path = os.path.join(predictor_dir, 'config.yaml')
     with open(cfg_path, 'r') as fp:
         ckpt_cfg = OmegaConf.load(fp.name)
-    #predictor = BaseCNN(**ckpt_cfg.model.predictor)
-    predictor=ToyMLP(**ckpt_cfg.model.predictor)
+    predictor = BaseCNN(**ckpt_cfg.model.predictor)
+    #predictor=ToyMLP(**ckpt_cfg.model.predictor)
     predictor_info = torch.load(predictor_path, map_location='cuda:0')
     predictor.load_state_dict({k.replace('predictor.', ''): v for k, v in predictor_info['state_dict'].items()}, strict=True)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -184,11 +188,13 @@ def main(cfg: DictConfig) -> Optional[float]:
     all_seqs_generated = list(init_seqs)
     max_n_seqs = cfg.max_n_seqs
     i_pointer = 0
-    while len(all_seqs_generated) < max_n_seqs:
-        next_seq = all_seqs_generated[i_pointer]
-        neighbs = get_neighbours_via_mutations(next_seq, num=cfg.random_traversal_neighborhood)
-        all_seqs_generated.extend(neighbs)
-        i_pointer += 1
+    with tqdm(total=max_n_seqs) as pbar:
+        while len(all_seqs_generated) < max_n_seqs:
+            next_seq = all_seqs_generated[i_pointer]
+            neighbs = get_neighbours_via_mutations(next_seq, num=cfg.random_traversal_neighborhood)
+            all_seqs_generated.extend(neighbs)
+            i_pointer += 1
+            pbar.update(len(neighbs))
 
     all_seqs = list(sorted(set(all_seqs_generated)))
     all_seqs_pt = to_batch_tensor(all_seqs, subset=None, device=device)

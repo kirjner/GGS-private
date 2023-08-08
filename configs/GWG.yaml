@@ -17,7 +17,7 @@ data:
   max_visits: 1
 
 run:
-  max_epochs: 20
+  max_epochs: 15
   run_name: run_${now:%Y-%m-%d}_${now:%H-%M} #IE_${run.max_epochs}  -- use this name if you don't want the date, but instead the number of epochs
   debug: False
   seed: 1

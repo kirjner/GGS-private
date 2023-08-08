@@ -1,0 +1,7 @@
+predictor_dir: ${paths.ckpt_dir}/Diagonal/mutations_0/percentile_0.0_1.0/smoothed/predictor
+temperature: 2
+gibbs_samples: 100
+verbose: False
+ckpt_name: last.ckpt
+task: Diagonal
+alphabet: "ABCDEFG"
