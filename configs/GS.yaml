@@ -8,7 +8,7 @@ defaults:
 rescaling: ratio 
 results_file: smoothed  
 ckpt_file: last.ckpt
-num_eigenvalues: 50
+num_eigenvalues: 5
 max_n_seqs: 2_000_000
 subsample: 0.1
 random_traversal_neighborhood: 1

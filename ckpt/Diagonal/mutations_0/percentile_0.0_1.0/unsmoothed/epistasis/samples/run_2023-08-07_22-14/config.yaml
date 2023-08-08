@@ -1,0 +1,33 @@
+data:
+  csv_path: null
+  cluster_cutoff: 500
+  max_visits: 1
+run:
+  max_epochs: 15
+  run_name: run_${now:%Y-%m-%d}_${now:%H-%M}
+  debug: false
+  seed: 3
+  cluster: true
+task_name: GWG
+paths:
+  root_dir: ${oc.env:PROJECT_ROOT}
+  data_dir: ${paths.root_dir}/data/
+  src_dir: ${paths.root_dir}/ggs/
+  config_dir: ${paths.src_dir}/configs/
+  sample_dir: ${paths.root_dir}/samples/
+  ckpt_dir: ${paths.root_dir}/ckpt/
+  log_dir: ${paths.root_dir}/logs/
+  output_dir: ${hydra:runtime.output_dir}
+  work_dir: ${hydra:runtime.cwd}
+extras:
+  ignore_warnings: false
+  enforce_tags: false
+  print_config: true
+experiment:
+  predictor_dir: ${paths.ckpt_dir}/Diagonal/mutations_0/percentile_0.0_1.0/unsmoothed/epistasis
+  temperature: 0.1
+  gibbs_samples: 100
+  verbose: false
+  ckpt_name: last.ckpt
+  task: Diagonal
+  alphabet: ABCDEFG

@@ -1,7 +1,7 @@
 seq_len: 7 #11^2 for diamond
 task: Diagonal
 diagonal:
-  csv_path: ${paths.data_dir}/Diagonal/ground_truth.csv
+  csv_path: ${paths.data_dir}/Diagonal/landscape_ep.csv
   output_dir: ${paths.data_dir}/Diagonal/
   filter_percentile: [0.0, 1.0]
   min_mutant_dist: 0

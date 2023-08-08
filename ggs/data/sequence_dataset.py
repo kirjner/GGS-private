@@ -324,9 +324,9 @@ class PreScoredSequenceDataset(Dataset):
 
     def cluster(self):
         # Convert to integer array. Doesn't matter what ordering we use.
-        alphabet = "ARNDCQEGHILKMFPSTWYV"
+        #alphabet = "ARNDCQEGHILKMFPSTWYV"
         #alphabet = '01'
-        #alphabet='ABCDEFG'
+        alphabet='ABCDEFG'
         seq_ints = [[
             alphabet.index(x) for x in seq
         ] for seq in self.sequences]

@@ -1,0 +1,98 @@
+model:
+  optimizer:
+    lr: 0.0001
+    weight_decay: 0.0001
+  predictor:
+    n_tokens: 7
+    kernel_size: 5
+    input_size: 32
+    dropout: 0.0
+    name: CNN
+    activation: relu
+    linear: true
+    seq_len: 7
+trainer:
+  default_root_dir: ${paths.output_dir}
+  min_epochs: 1
+  max_epochs: 200
+  accelerator: gpu
+  log_every_n_steps: 1
+  check_val_every_n_epoch: 1
+  deterministic: false
+data:
+  task: ${experiment.task}
+  seed: 420
+  batch_size: 32
+  pin_memory: false
+  num_workers: 4
+  encoding: onehot
+  alphabet: ABCDEFG
+  val_samples: 20
+  sequence_column: sequence
+callbacks:
+  model_checkpoint:
+    _target_: pytorch_lightning.callbacks.ModelCheckpoint
+    dirpath: ./ckpt/Diagonal/mutations_0/percentile_0.0_1.0/smoothed/run_07D_08M_2023Y_20h_29m_11s
+    filename: epoch_{epoch:03d}
+    monitor: val/spearmanr
+    mode: max
+    save_last: true
+    save_top_k: 3
+    auto_insert_metric_name: false
+    save_weights_only: false
+    every_n_train_steps: null
+    train_time_interval: null
+    every_n_epochs: null
+    save_on_train_epoch_end: null
+  early_stopping:
+    _target_: pytorch_lightning.callbacks.EarlyStopping
+    monitor: val/spearmanr
+    patience: 10
+    verbose: false
+    mode: max
+wandb:
+  _target_: pytorch_lightning.loggers.wandb.WandbLogger
+  name: null
+  save_dir: ${paths.output_dir}
+  offline: true
+  project: ${data.task}
+  log_model: false
+model_checkpoint_dir: null
+preprocessed_data_path: null
+num_gpus: 1
+run_name: null
+debug: false
+task_name: train_predictor
+tags:
+- dev
+- latest
+ckpt_path: null
+seed: null
+paths:
+  root_dir: ${oc.env:PROJECT_ROOT}
+  data_dir: ${paths.root_dir}/data/
+  src_dir: ${paths.root_dir}/ggs/
+  config_dir: ${paths.src_dir}/configs/
+  sample_dir: ${paths.root_dir}/samples/
+  ckpt_dir: ${paths.root_dir}/ckpt/
+  log_dir: ${paths.root_dir}/logs/
+  output_dir: ${hydra:runtime.output_dir}
+  work_dir: ${hydra:runtime.cwd}
+extras:
+  ignore_warnings: false
+  enforce_tags: false
+  print_config: true
+experiment:
+  seq_len: 7
+  task: Diagonal
+  diagonal:
+    csv_path: ${paths.data_dir}/Diagonal/landscape_noep_constrained.csv
+    output_dir: ${paths.data_dir}/Diagonal/
+    filter_percentile:
+    - 0.0
+    - 1.0
+    min_mutant_dist: 0
+    top_quantile: 0.99
+    use_levenshtein: true
+    use_neg_data: false
+    smoothed_data_fname: smoothed-2023-08-07_20-22-12.csv
